@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html" />
+
+<dom-module>
+	<template>
+		<slot id="contentNode" name="iron-ajax"></slot>
+	</template>
+	<script>
+		Polymer({
+			is: 'coa-ajax',
+			get _accessToken() {
+				var reg = new RegExp('(?:(?:^|.*;\\s*)' +
+							'access_token' +
+							'\\s*\\=\\s*([^;]*).*$)|^.*$');
+				return '12345';
+				return document.cookie.replace(reg, '$1');
+			},
+            get _ironAjax() {
+				//Left in as it's a good example. Not sure why I'm doing it another way.
+                //return this.getContentChildren('iron-ajax')[0];
+				return this.root.querySelector('iron-ajax');
+            },
+			setToken: function() {
+				var ajaxElem = this._ironAjax;
+				var headers = ajaxElem.headers || {};
+				headers['Authorization'] = 'Bearer ' + this._accessToken;
+				ajaxElem.setAttribute('headers', JSON.stringify(headers));
+			},
+			attached: function() {
+				this.setToken();
+			}
+		});
+	</script>
+</dom-module>
