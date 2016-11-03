@@ -18,13 +18,17 @@
             get _ironAjax() {
 				//Left in as it's a good example. Not sure why I'm doing it another way.
                 //return this.getContentChildren('iron-ajax')[0];
-				return this.root.querySelector('iron-ajax');
+				return this.root.querySelectorAll('iron-ajax');
             },
 			setToken: function() {
-				var ajaxElem = this._ironAjax;
-				var headers = ajaxElem.headers || {};
-				headers['Authorization'] = 'Bearer ' + this._accessToken;
-				ajaxElem.setAttribute('headers', JSON.stringify(headers));
+				var ajaxElems = this._ironAjax;
+				var authStr = 'Bearer ' + this._accessToken;
+				for (i = 0; i < ajaxElems.length; i++) {
+					var headers = ajaxElems[i].headers || {};
+					headers['Authorization'] = authStr;
+					//ajaxElems[i].setAttribute('headers', JSON.stringify(headers));
+					ajaxElems[i].headers = headers;
+				}
 			},
 			ready: function() {
 				this.setToken();
